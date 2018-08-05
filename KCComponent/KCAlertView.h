@@ -55,6 +55,8 @@ typedef enum : NSUInteger {
 @property (nonatomic,strong) UIFont *detailFont;// apprance
 @property (nonatomic,strong) UIColor *contentBackgroundColor;// apprance
 @property (nonatomic,strong) UIColor *separatorColor;// apprance
+@property (nonatomic,strong) UIImage *buttonBackgroundImage;// apprance
+@property (nonatomic,strong) UIImage *buttonHighlightedBackgroundImage;// apprance
 // default YES
 @property (nonatomic,assign) BOOL actionDismiss;// apprance
 

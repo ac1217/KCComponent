@@ -61,7 +61,8 @@
     alertView.actionDismiss = appearance.actionDismiss;
     alertView.separatorColor = appearance.separatorColor;
     alertView.contentBackgroundColor = appearance.contentBackgroundColor;
-    
+    alertView.buttonBackgroundImage = appearance.buttonBackgroundImage;
+    alertView.buttonHighlightedBackgroundImage = appearance.buttonHighlightedBackgroundImage;
     return [self new];
 }
 
@@ -514,6 +515,18 @@
 {
     
     UIButton *actionBtn = [UIButton buttonWithType:UIButtonTypeSystem];
+    
+    if (self.buttonBackgroundImage) {
+        
+        actionBtn = [UIButton new];
+        [actionBtn setBackgroundImage:self.buttonBackgroundImage forState:0];
+        [actionBtn setBackgroundImage:self.buttonHighlightedBackgroundImage forState:UIControlStateHighlighted];
+        
+    }else {
+        
+         actionBtn = [UIButton buttonWithType:UIButtonTypeSystem];
+    }
+    
     actionBtn.titleLabel.font = action.titleFont;
     if (action.attributedTitle) {
         

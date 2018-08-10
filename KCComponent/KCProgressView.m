@@ -19,13 +19,31 @@
 
 @implementation KCProgressView
 
-//- (instancetype)initWithStyle:(KCProgressViewStyle)style
-//{
-//    if (self = [super init]) {
-//        _style = style;
-//    }
-//    return self;
-//}
++ (instancetype)appearance
+{
+    static id instance_;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        instance_ = [[self alloc] init];
+    });
+    return instance_;
+}
+
+
++ (instancetype)progressView
+{
+    KCProgressView *progress = [[self alloc] init];
+    
+    KCProgressView *appearance = [self appearance];
+    progress.progressTextColor = appearance.progressTextColor;
+    progress.progressTextFont = appearance.progressTextFont;
+    progress.progressTintColor = appearance.progressTintColor;
+    progress.lineWidth = appearance.lineWidth;
+    progress.lineCap = appearance.lineCap;
+    
+    return progress;
+}
+
 
 - (void)setProgressTextFont:(UIFont *)progressTextFont
 {
@@ -102,6 +120,16 @@
     return self.progressLayer.strokeEnd;
 }
 
+- (void)setStyle:(KCProgressViewStyle)style
+{
+    if (_style == style) {
+        return;
+    }
+    _style = style;
+    
+    [self setNeedsLayout];
+}
+
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
@@ -150,6 +178,26 @@
             CGFloat endAngle = startAngle + M_PI * 2;
             
             UIBezierPath *path = [UIBezierPath bezierPathWithArcCenter:CGPointMake(self.layer.bounds.size.width * 0.5, self.layer.bounds.size.height * 0.5) radius:self.layer.bounds.size.width * 0.5 startAngle:startAngle endAngle:endAngle clockwise:1];
+            
+            self.trackLayer.path = path.CGPath;
+            self.progressLayer.path = path.CGPath;
+            
+        }
+            break;
+        case KCProgressViewStyleRect:
+        {
+            
+            UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:self.layer.bounds cornerRadius:self.layer.cornerRadius];
+            
+            self.trackLayer.path = path.CGPath;
+            self.progressLayer.path = path.CGPath;
+            
+        }
+            break;
+        case KCProgressViewStyleCustom:
+        {
+            
+            UIBezierPath *path = self.path;
             
             self.trackLayer.path = path.CGPath;
             self.progressLayer.path = path.CGPath;

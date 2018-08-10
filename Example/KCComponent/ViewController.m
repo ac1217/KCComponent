@@ -42,7 +42,8 @@
     
     KCProgressView *p = [[KCProgressView alloc] init];
 //    p.style = KCProgressViewStyleCircle;
-    p.frame = CGRectMake(100,100, 100, 100);
+    p.frame = CGRectMake(100,100, 50, 50);
+    p.layer.cornerRadius = 10;
 //    p.backgroundColor = [UIColor redColor];
     [self.view addSubview:p];
     self.pv = p;
@@ -67,6 +68,7 @@
     self.pv.progress = count / 100.0;
     
     self.tv.progress = self.pv.progress;
+    self.pv.style = KCProgressViewStyleRect;
 }
 
 - (void)didReceiveMemoryWarning {

@@ -10,12 +10,16 @@
 
 typedef NS_ENUM(NSInteger, KCProgressViewStyle) {
     KCProgressViewStyleLine,  // normal progress bar
-    KCProgressViewStyleCircle
+    KCProgressViewStyleCircle,
+    KCProgressViewStyleRect,
+    KCProgressViewStyleCustom
 };
 
 @interface KCProgressView : UIView
 
 //- (instancetype)initWithStyle:(KCProgressViewStyle)style;
+
++ (instancetype)progressView;
 
 @property(nonatomic) KCProgressViewStyle style;
 
@@ -30,6 +34,7 @@ typedef NS_ENUM(NSInteger, KCProgressViewStyle) {
 @property(nonatomic, assign) CGFloat lineWidth;
 @property(nonatomic, copy) NSString *lineCap;
 
+@property(nonatomic, strong) UIBezierPath *path;
 
 @property(nonatomic) float progress;
 //- (void)setProgress:(float)progress animated:(BOOL)animated NS_AVAILABLE_IOS(5_0);

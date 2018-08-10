@@ -28,6 +28,10 @@ typedef enum : NSUInteger {
 
 @property (nonatomic,strong) NSAttributedString *attributedTitle;
 @property (nonatomic,copy) void(^handler)(KCAlertAction *action);
+
++ (instancetype)actionWithTitle:(NSString *)title  style:(KCAlertActionStyle)style handler:(void(^)(KCAlertAction *action))handler;
+
+- (instancetype)initWithTitle:(NSString *)title  style:(KCAlertActionStyle)style handler:(void(^)(KCAlertAction *action))handler;
 @end
 
 typedef enum : NSUInteger {

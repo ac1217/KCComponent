@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "KCProgressView.h"
 
 typedef enum : NSUInteger {
     KCToastViewPositionCenter,
@@ -46,6 +47,8 @@ typedef enum : NSUInteger {
 @property (nonatomic,assign) KCToastViewStyle style;
 @property (nonatomic,copy) NSString *text;
 @property (nonatomic,assign) float progress;
+
+@property (nonatomic,strong) KCProgressView *progressView;
  /**
   * toast展示的位置
   */
@@ -73,11 +76,19 @@ typedef enum : NSUInteger {
 @property (nonatomic,strong) UIImage *errorImage;// apprance
 @property (nonatomic,strong) UIImage *infoImage;// apprance
 /**
- * 限制image最大尺寸
+ * 指定image尺寸
  */
-@property (nonatomic,assign) CGSize maxImageSize;// apprance
+@property (nonatomic,assign) CGSize imageSize;// apprance
 /**
- * 显示市场。到时自动消失，大于0时有效
+ * 指定progress尺寸
+ */
+@property (nonatomic,assign) CGSize progressSize;// apprance
+/**
+ * 指定loading尺寸
+ */
+@property (nonatomic,assign) CGSize loadingSize;// apprance,待用
+/**
+ * 显示时长。到时自动消失，大于0时有效
  */
 @property (nonatomic,assign) NSTimeInterval duration;
 

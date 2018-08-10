@@ -15,7 +15,6 @@
 @property (nonatomic,strong) UILabel *textLabel;
 @property (nonatomic,strong) UIImageView *imageView;
 
-@property (nonatomic,strong) UIProgressView *progressView;
 @property (nonatomic,strong) UIActivityIndicatorView *indicatorView;
 
 @property (nonatomic,strong) UIControl *controlView;
@@ -103,7 +102,9 @@
     toastView.infoImage = appearance.infoImage;
     toastView.contentBackgroundColor = appearance.contentBackgroundColor;
     toastView.maskType = appearance.maskType;
-    toastView.maxImageSize = appearance.maxImageSize;
+    toastView.imageSize = appearance.imageSize;
+    toastView.progressSize = appearance.progressSize;
+    toastView.loadingSize = appearance.loadingSize;
     
     return toastView;
 }
@@ -206,16 +207,18 @@
         
     } completion:^(BOOL finished) {
         
-        if (self.duration > 0) {
-            
-            [self addTimer];
-        }
+        
         
 //        switch (self.style) {
 //            case KCToastViewStyleInfo:
 //            case KCToastViewStyleSuccess:
 //            case KCToastViewStyleError:
-//                [self addTimer];
+//                {
+                    if (self.duration > 0) {
+                        
+                        [self addTimer];
+                    }
+//                }
 //                break;
 //
 //            default:
@@ -281,13 +284,17 @@
     return _contentView;
 }
 
-- (UIProgressView *)progressView
+- (KCProgressView *)progressView
 {
     if (!_progressView) {
-        _progressView = [[UIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleDefault];
-        _progressView.frame = CGRectMake(0, 0, 120, 30);
+        _progressView = [[KCProgressView alloc] init];
+        _progressView.style = KCProgressViewStyleCircle;
+        _progressView.frame = CGRectMake(0, 0, 30, 30);
         _progressView.trackTintColor = [UIColor colorWithWhite:1 alpha:0.5];
+        _progressView.progressTextFont = [UIFont systemFontOfSize:10];
+        _progressView.lineWidth = 3;
         _progressView.progressTintColor = [UIColor whiteColor];
+        _progressView.progressTextColor = [UIColor whiteColor];
         
     }
     return _progressView;
@@ -336,7 +343,7 @@
         [self.contentView.contentView addSubview:self.imageView];
         [self.contentView.contentView addSubview:self.progressView];
         [self.contentView.contentView addSubview:self.indicatorView];
-        self.duration = 3;
+//        self.duration = 3;
         self.alpha = 0;
         
         [self addTarget:self action:@selector(controlViewDidReceiveTouchEvent:forEvent:) forControlEvents:UIControlEventTouchDown];
@@ -358,21 +365,24 @@
     CGSize textSize = [self.textLabel sizeThatFits:maxSize];
     
     CGSize imageSize = [self.imageView sizeThatFits:maxSize];
-    if (!CGSizeEqualToSize(self.maxImageSize, CGSizeZero)) {
-        
-        if (imageSize.width > self.maxImageSize.width && imageSize.height > self.maxImageSize.height) {
-            imageSize = self.maxImageSize;
-        }
+    if (!CGSizeEqualToSize(self.imageSize, CGSizeZero)) {
+        imageSize = self.imageSize;
+//        if (imageSize.width > self.maxImageSize.width && imageSize.height > self.maxImageSize.height) {
+//            imageSize = self.maxImageSize;
+//        }
         
     }
     
     CGSize indicatorSize = [self.indicatorView sizeThatFits:maxSize];
     CGSize progressSize = self.progressView.frame.size;
     
+    if (!CGSizeEqualToSize(self.progressSize, CGSizeZero)) {
+        progressSize = self.progressSize;
+        
+    }
     
-   
-    CGFloat marginH = 10;
-    CGFloat marginV = 8;
+    CGFloat marginH = 15;
+    CGFloat marginV = 10;
     
     if (self.layoutDirection == KCToastViewLayoutDirectionHorizontal) {
      

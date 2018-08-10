@@ -13,5 +13,6 @@
 #import "KCToastView.h"
 #import "KCAlertView.h"
 #import "KCNavigationView.h"
+#import "KCProgressView.h"
 
 #endif /* KCComponent_h */

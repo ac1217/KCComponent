@@ -14,13 +14,39 @@
 {
     self = [super init];
     if (self) {
-        self.titleFont = [UIFont systemFontOfSize:18];
-        self.titleColor = [UIColor darkTextColor];
-        self.cancelTitleColor = [UIColor darkGrayColor];
-        self.destructiveTitleColor = [UIColor redColor];
+        [self setup];
     }
     return self;
 }
+
++ (instancetype)actionWithTitle:(NSString *)title style:(KCAlertActionStyle)style handler:(void (^)(KCAlertAction *))handler
+{
+    return [[self alloc] initWithTitle:title style:style handler:handler];
+}
+
+- (instancetype)initWithTitle:(NSString *)title  style:(KCAlertActionStyle)style handler:(void(^)(KCAlertAction *action))handler
+{
+    if (self = [super init]) {
+        [self setup];
+        
+        self.title = title;
+        self.style = style;
+        self.handler = handler;
+        
+    }
+    return self;
+}
+
+- (void)setup
+{
+    self.titleFont = [UIFont systemFontOfSize:18];
+    self.titleColor = [UIColor darkTextColor];
+    self.cancelTitleColor = [UIColor darkGrayColor];
+    self.destructiveTitleColor = [UIColor redColor];
+}
+
+
+
 @end
 
 @interface KCAlertView()
@@ -222,7 +248,7 @@
 {
     if (!_detailLabel) {
         _detailLabel = [UILabel new];
-        _detailLabel.textColor = [UIColor darkGrayColor];
+        _detailLabel.textColor = [UIColor grayColor];
         _detailLabel.font = [UIFont systemFontOfSize:16];
         _detailLabel.numberOfLines = 0;
         _detailLabel.textAlignment = NSTextAlignmentCenter;
@@ -257,7 +283,6 @@
 {
 //    [super layoutSubviews];
     
-    self.controlView.frame = self.bounds;
     
     CGFloat contentW = 0;
     CGFloat contentH = 0;
@@ -487,15 +512,23 @@
     
     contentH = startY;
     
-    self.contentView.frame = CGRectMake(0, 0, contentW, contentH);
+    
+    
     
     if (self.style == KCAlertViewStyleAlert) {
+        self.contentView.frame = CGRectMake(0, 0, contentW, contentH);
         self.contentView.center = CGPointMake(self.bounds.size.width * 0.5, self.bounds.size.height * 0.5);
     }else {
+        
+        if (@available(iOS 11.0, *)) {
+            contentH += self.safeAreaInsets.bottom;
+        }
+        self.contentView.frame = CGRectMake(0, 0, contentW, contentH);
         
         self.contentView.center = CGPointMake(self.bounds.size.width * 0.5, self.bounds.size.height - self.contentView.frame.size.height * 0.5);
     }
     
+    self.controlView.frame = self.bounds;
     
 }
 

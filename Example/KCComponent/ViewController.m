@@ -48,7 +48,7 @@
                      ];
     // 创建
     KCBannerView *bannerView = [[KCBannerView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 150)];
-    
+//    bannerView.pageControlPosition = KCBannerViewPageControlPositionRight;
     // 设置代理
     bannerView.delegate = self;
     // 数据源
@@ -58,8 +58,10 @@
 //    bannerView.backgroundColor = [UIColor redColor];
     // 添加
     [self.sv addSubview:bannerView];
-    
-    [bannerView reloadData];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        
+        [bannerView reloadData];
+    });
     
     self.bannerView = bannerView;
     [self.view addSubview:self.sv];

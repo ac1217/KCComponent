@@ -24,14 +24,6 @@ typedef NS_ENUM(NSInteger, KCBannerViewPageControlPosition) {
 - (NSInteger)numberOfItemsInBannerView:(KCBannerView *)bannerView;
 
 - (void)bannerView:(KCBannerView *)bannerView loadItemWith:(UIImageView *)imageView forIndex:(NSInteger)index;
-// 可以返回UIImage,NSString,NSURL,NSData类型
-//- (id)bannerView:(KCBannerView *)bannerView imageResourceAtIndex:(NSInteger)index;
-//- (id <KCBannerProtocol>)bannerView:(KCBannerView *)bannerView bannerAtIndex:(NSInteger)index;
-
-@optional
-//- (UIImage *)bannerView:(KCBannerView *)bannerView placeholderImageAtIndex:(NSInteger)index;
-//- (NSString *)bannerView:(KCBannerView *)bannerView descriptionStringAtIndex:(NSInteger)index;
-//- (NSAttributedString *)bannerView:(KCBannerView *)bannerView descriptionAttributedStringAtIndex:(NSInteger)index;
 
 @end
 
@@ -46,14 +38,8 @@ typedef NS_ENUM(NSInteger, KCBannerViewPageControlPosition) {
 
 @interface KCBannerView : UIView
 
-
-/*kind of UIImage or imageNamed*/
-//@property (nonatomic, strong) UIImage *placeholderImage;
 // 页数控件
 @property (nonatomic, strong, readonly) UIPageControl *pageControl;
-
-// 当数据为空时显示的图片空间
-//@property (nonatomic, strong, readonly) UIImageView *emptyImageView;
 
 // 代理
 @property (nonatomic, weak) id<KCBannerViewDelegate> delegate;
@@ -62,21 +48,13 @@ typedef NS_ENUM(NSInteger, KCBannerViewPageControlPosition) {
 @property (nonatomic, weak) id<KCBannerViewDataSource> dataSource;
 
 // 循环间隔
-@property (nonatomic, assign) CGFloat timeInterval;
+@property (nonatomic, assign) NSTimeInterval timeInterval;
 
 // 是否循环轮播，默认为YES，当数据个数少于等于1时此值为NO
 @property (nonatomic, assign, getter=isRepeat) BOOL repeat;
 
 @property (nonatomic, assign) UICollectionViewScrollDirection scrollDirection;
 @property (nonatomic, assign) KCBannerViewPageControlPosition pageControlPosition;
-//@property (nonatomic, assign) KCBannerViewDescPosition descPosition;
-
-
-
-//- (void)setPageControlPageImage:(UIImage *)pageImage;
-
-//- (void)setPageControlCurrentPageImage:(UIImage *)currentPageImage;
-
 // 刷新数据
 - (void)reloadData;
 

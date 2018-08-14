@@ -129,11 +129,13 @@ static const NSInteger KCMaxSectionCount = 100;
 
 - (void)nextPage
 {
-    NSIndexPath *indexPath = self.collectionView.indexPathsForVisibleItems.lastObject;
+//    NSIndexPath *indexPath = self.collectionView.indexPathsForVisibleItems.lastObject;
+    
+    
     
     NSInteger count = self.pageControl.numberOfPages;
     
-    NSInteger item = KCMaxSectionCount * count / 2 + indexPath.item % count;
+    NSInteger item = KCMaxSectionCount * count / 2 + self.pageControl.currentPage % count;
     
     NSIndexPath *currentIndexPath = [NSIndexPath indexPathForItem:item inSection:0];
     NSIndexPath *nextIndexPath = [NSIndexPath indexPathForItem:item + 1 inSection:0];
@@ -419,9 +421,9 @@ static const NSInteger KCMaxSectionCount = 100;
         _pageControl.hidesForSinglePage = YES;
         _pageControl.currentPageIndicatorTintColor = [UIColor whiteColor];
         _pageControl.pageIndicatorTintColor = [UIColor lightGrayColor];
-        _pageControl.userInteractionEnabled = NO;
+//        _pageControl.userInteractionEnabled = NO;
         
-//        [_pageControl addTarget:self action:@selector(pageChanged) forControlEvents:UIControlEventValueChanged];
+        [_pageControl addTarget:self action:@selector(pageChanged) forControlEvents:UIControlEventValueChanged];
         
     }
     return _pageControl;

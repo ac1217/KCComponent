@@ -57,14 +57,14 @@
     //    bannerView.pageControlPosition = KCBannerViewPageControlPositionRight;
 //    bannerView.backgroundColor = [UIColor redColor];
     // 添加
-    [self.sv addSubview:bannerView];
+    [self.view addSubview:bannerView];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        
+    
         [bannerView reloadData];
     });
-    
+
     self.bannerView = bannerView;
-    [self.view addSubview:self.sv];
+//    [self.view addSubview:self.sv];
 }
 - (IBAction)sheet:(id)sender {
     

@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "KCProgressView.h"
+#import "KCLoadingView.h"
 
 typedef enum : NSUInteger {
     KCToastViewPositionCenter,
@@ -34,10 +35,10 @@ typedef enum : NSUInteger {
     KCToastViewMaskTypeBlack
 } KCToastViewMaskType;
 
-typedef enum : NSUInteger {
-    KCToastViewLoadingTypeDefault,
-    KCToastViewLoadingTypeGif
-} KCToastViewLoadingType;
+//typedef enum : NSUInteger {
+//    KCToastViewLoadingTypeDefault,
+//    KCToastViewLoadingTypeGif
+//} KCToastViewLoadingType;
 
 
 @interface KCToastView : UIControl
@@ -49,6 +50,9 @@ typedef enum : NSUInteger {
 @property (nonatomic,assign) float progress;
 
 @property (nonatomic,strong) KCProgressView *progressView;
+@property (nonatomic,strong) KCLoadingView *loadingView;
+
+
  /**
   * toast展示的位置
   */
@@ -56,7 +60,12 @@ typedef enum : NSUInteger {
 /**
  * loading类型：gif或者菊花
  */
-@property (nonatomic,assign) KCToastViewLoadingType loadingType;// apprance
+@property (nonatomic,assign) KCLoadingViewStyle loadingStyle;// apprance
+/**
+ * progress类型：
+ */
+@property (nonatomic,assign) KCProgressViewStyle progressStyle;// apprance
+
 /**
  * 背景颜色以及是否允许交互
  */

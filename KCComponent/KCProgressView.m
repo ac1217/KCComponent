@@ -218,7 +218,7 @@
         _trackLayer.strokeColor = [UIColor colorWithWhite:0 alpha:0.2].CGColor;
         _trackLayer.fillColor = [UIColor clearColor].CGColor;
         
-        _trackLayer.lineWidth = 5;
+        _trackLayer.lineWidth = 3;
         _trackLayer.lineCap = kCALineCapRound;
         _trackLayer.strokeStart = 0;
         _trackLayer.strokeEnd = 1;
@@ -230,10 +230,10 @@
 {
     if (!_progressLayer) {
         _progressLayer = [CAShapeLayer new];
-        _progressLayer.strokeColor = [UIColor orangeColor].CGColor;
+        _progressLayer.strokeColor = [UIColor whiteColor].CGColor;
         _progressLayer.fillColor = [UIColor clearColor].CGColor;
         
-        _progressLayer.lineWidth = 5;
+        _progressLayer.lineWidth = 3;
         _progressLayer.lineCap = kCALineCapRound;
         _progressLayer.strokeStart = 0;
         _progressLayer.strokeEnd = 0;
@@ -245,8 +245,8 @@
 {
     if (!_progressLabel) {
         _progressLabel = [UILabel new];
-        _progressLabel.textColor = [UIColor grayColor];
-        _progressLabel.font = [UIFont systemFontOfSize:14];
+        _progressLabel.textColor = [UIColor whiteColor];
+        _progressLabel.font = [UIFont systemFontOfSize:10];
         _progressLabel.textAlignment = NSTextAlignmentCenter;
         _progressLabel.text = @"0%";
     }

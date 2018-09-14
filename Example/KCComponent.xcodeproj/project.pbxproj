@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0797490E211F3A5F001677F0 /* KCBannerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0797490D211F3A5F001677F0 /* KCBannerView.m */; };
+		07A10335214A3CA300E5D853 /* KCLoadingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 07A10334214A3CA300E5D853 /* KCLoadingView.m */; };
 		07E3E630211557C500AFE9DF /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 07E3E62F211557C500AFE9DF /* AppDelegate.m */; };
 		07E3E633211557C500AFE9DF /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 07E3E632211557C500AFE9DF /* ViewController.m */; };
 		07E3E636211557C500AFE9DF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 07E3E634211557C500AFE9DF /* Main.storyboard */; };
@@ -46,6 +47,8 @@
 /* Begin PBXFileReference section */
 		0797490C211F3A5E001677F0 /* KCBannerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KCBannerView.h; sourceTree = "<group>"; };
 		0797490D211F3A5F001677F0 /* KCBannerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KCBannerView.m; sourceTree = "<group>"; };
+		07A10333214A3CA300E5D853 /* KCLoadingView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KCLoadingView.h; sourceTree = "<group>"; };
+		07A10334214A3CA300E5D853 /* KCLoadingView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KCLoadingView.m; sourceTree = "<group>"; };
 		07E3E62B211557C500AFE9DF /* KCComponent.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KCComponent.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		07E3E62E211557C500AFE9DF /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		07E3E62F211557C500AFE9DF /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -185,6 +188,8 @@
 				07F7FF38211D70F100613DE9 /* KCProgressView.h */,
 				07F7FF39211D70F100613DE9 /* KCProgressView.m */,
 				07E3E67A2115589C00AFE9DF /* KCComponent.h */,
+				07A10333214A3CA300E5D853 /* KCLoadingView.h */,
+				07A10334214A3CA300E5D853 /* KCLoadingView.m */,
 			);
 			name = KCComponent;
 			path = ../../KCComponent;
@@ -511,6 +516,7 @@
 				07E3E6762115583000AFE9DF /* KCToastView..m in Sources */,
 				07E3E6782115583000AFE9DF /* KCAlertView.m in Sources */,
 				0797490E211F3A5F001677F0 /* KCBannerView.m in Sources */,
+				07A10335214A3CA300E5D853 /* KCLoadingView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -684,7 +690,10 @@
 				DEVELOPMENT_TEAM = 9W8KXJ7KY8;
 				INFOPLIST_FILE = KCComponent/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.erica.KCComponent;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -700,7 +709,10 @@
 				DEVELOPMENT_TEAM = 9W8KXJ7KY8;
 				INFOPLIST_FILE = KCComponent/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.erica.KCComponent;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -715,7 +727,11 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 2Y52UEM99S;
 				INFOPLIST_FILE = KCComponentTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.erica.KCComponentTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -731,7 +747,11 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 2Y52UEM99S;
 				INFOPLIST_FILE = KCComponentTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.erica.KCComponentTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -746,7 +766,11 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 2Y52UEM99S;
 				INFOPLIST_FILE = KCComponentUITests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.erica.KCComponentUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -761,7 +785,11 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 2Y52UEM99S;
 				INFOPLIST_FILE = KCComponentUITests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.erica.KCComponentUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";

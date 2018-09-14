@@ -15,7 +15,7 @@
 @property (nonatomic,strong) UILabel *textLabel;
 @property (nonatomic,strong) UIImageView *imageView;
 
-@property (nonatomic,strong) UIActivityIndicatorView *indicatorView;
+//@property (nonatomic,strong) UIActivityIndicatorView *indicatorView;
 
 @property (nonatomic,strong) UIControl *controlView;
 
@@ -35,6 +35,26 @@
         instance_ = [[self alloc] init];
     });
     return instance_;
+}
+
+- (void)setLoadingStyle:(KCLoadingViewStyle)loadingStyle
+{
+    self.loadingView.style = loadingStyle;
+}
+
+- (KCLoadingViewStyle)loadingStyle
+{
+    return self.loadingView.style;
+}
+
+- (KCProgressViewStyle)progressStyle
+{
+    return self.progressView.style;
+}
+
+- (void)setProgressStyle:(KCProgressViewStyle)progressStyle
+{
+    self.progressView.style = progressStyle;
 }
 
 - (void)setContentBackgroundColor:(UIColor *)contentBackgroundColor
@@ -95,7 +115,7 @@
     toastView.textFont = appearance.textFont;
     toastView.layoutDirection = appearance.layoutDirection;
     toastView.position = appearance.position;
-    toastView.loadingType = appearance.loadingType;
+//    toastView.loadingType = appearance.loadingType;
     toastView.errorImage = appearance.errorImage;
     toastView.successImage = appearance.successImage;
     toastView.loadingImages = appearance.loadingImages;
@@ -105,6 +125,8 @@
     toastView.imageSize = appearance.imageSize;
     toastView.progressSize = appearance.progressSize;
     toastView.loadingSize = appearance.loadingSize;
+    toastView.loadingStyle = appearance.loadingStyle;
+    toastView.progressStyle = appearance.progressStyle;
     
     return toastView;
 }
@@ -124,50 +146,43 @@
             self.imageView.hidden = NO;
             self.textLabel.hidden = NO;
             self.progressView.hidden = YES;
-            [self.indicatorView stopAnimating];
+            self.loadingView.hidden = YES;
+            [self.loadingView stopAnimating];
             self.imageView.image = self.infoImage;
             break;
         case KCToastViewStyleSuccess:
             self.imageView.hidden = NO;
             self.textLabel.hidden = NO;
             self.progressView.hidden = YES;
-            [self.indicatorView stopAnimating];
+            self.loadingView.hidden = YES;
+            [self.loadingView stopAnimating];
             self.imageView.image = self.successImage;
             break;
         case KCToastViewStyleError:
             self.imageView.hidden = NO;
             self.textLabel.hidden = NO;
             self.progressView.hidden = YES;
-            [self.indicatorView stopAnimating];
+            self.loadingView.hidden = YES;
+            [self.loadingView stopAnimating];
             self.imageView.image = self.errorImage;
             
             break;
         case KCToastViewStyleLoading:
             
-            if (self.loadingType == KCToastViewLoadingTypeDefault) {
-                
-                self.imageView.hidden = YES;
-                [self.indicatorView startAnimating];
-                self.imageView.animationImages = nil;
-                [self.imageView stopAnimating];
-                
-            }else {
-                
-                self.imageView.hidden = NO;
-                [self.indicatorView stopAnimating];
-                self.imageView.animationImages = self.loadingImages;
-                [self.imageView startAnimating];
-                
-            }
-            
+            self.imageView.hidden = YES;
+            self.loadingView.hidden = NO;
+            [self.loadingView startAnimating];
+            self.loadingView.images = self.loadingImages;
             self.textLabel.hidden = NO;
             self.progressView.hidden = YES;
+            
             break;
         case KCToastViewStyleProgress:
             self.imageView.hidden = YES;
             self.textLabel.hidden = NO;
             self.progressView.hidden = NO;
-            [self.indicatorView stopAnimating];
+            self.loadingView.hidden = YES;
+            [self.loadingView stopAnimating];
             break;
             
         default:
@@ -287,27 +302,36 @@
 - (KCProgressView *)progressView
 {
     if (!_progressView) {
-        _progressView = [[KCProgressView alloc] init];
+        _progressView = [KCProgressView progressView];
         _progressView.style = KCProgressViewStyleCircle;
         _progressView.frame = CGRectMake(0, 0, 30, 30);
-        _progressView.trackTintColor = [UIColor colorWithWhite:1 alpha:0.5];
-        _progressView.progressTextFont = [UIFont systemFontOfSize:10];
-        _progressView.lineWidth = 3;
-        _progressView.progressTintColor = [UIColor whiteColor];
-        _progressView.progressTextColor = [UIColor whiteColor];
+//        _progressView.trackTintColor = [UIColor colorWithWhite:1 alpha:0.5];
+//        _progressView.progressTextFont = [UIFont systemFontOfSize:10];
+//        _progressView.lineWidth = 3;
+//        _progressView.progressTintColor = [UIColor whiteColor];
+//        _progressView.progressTextColor = [UIColor whiteColor];
         
     }
     return _progressView;
 }
 
-- (UIActivityIndicatorView *)indicatorView
+- (KCLoadingView *)loadingView
 {
-    if (!_indicatorView) {
-        _indicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
-        _indicatorView.hidesWhenStopped = YES;
+    if (!_loadingView) {
+        _loadingView = [KCLoadingView loadingView];
+        _loadingView.frame = CGRectMake(0, 0, 30, 30);
     }
-    return _indicatorView;
+    return _loadingView;
 }
+
+//- (UIActivityIndicatorView *)indicatorView
+//{
+//    if (!_indicatorView) {
+//        _indicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
+//        _indicatorView.hidesWhenStopped = YES;
+//    }
+//    return _indicatorView;
+//}
 
 
 - (UILabel *)textLabel
@@ -342,7 +366,8 @@
         [self.contentView.contentView addSubview:self.textLabel];
         [self.contentView.contentView addSubview:self.imageView];
         [self.contentView.contentView addSubview:self.progressView];
-        [self.contentView.contentView addSubview:self.indicatorView];
+//        [self.contentView.contentView addSubview:self.indicatorView];
+        [self.contentView.contentView addSubview:self.loadingView];
 //        self.duration = 3;
         self.alpha = 0;
         
@@ -373,11 +398,16 @@
         
     }
     
-    CGSize indicatorSize = [self.indicatorView sizeThatFits:maxSize];
-    CGSize progressSize = self.progressView.frame.size;
+//    CGSize indicatorSize = [self.indicatorView sizeThatFits:maxSize];
     
+    CGSize progressSize = self.progressView.frame.size;
+    CGSize loadingSize = self.loadingView.frame.size;
     if (!CGSizeEqualToSize(self.progressSize, CGSizeZero)) {
         progressSize = self.progressSize;
+        
+    }
+    if (!CGSizeEqualToSize(self.loadingSize, CGSizeZero)) {
+        loadingSize = self.loadingSize;
         
     }
     
@@ -389,32 +419,16 @@
         switch (self.style) {
             case KCToastViewStyleLoading:
                 
-                if (self.loadingType == KCToastViewLoadingTypeDefault) {
-                    contentH = MAX(indicatorSize.height, textSize.height) + 2 * marginV;
-                    
-                    contentW = marginH;
-                    if (!CGSizeEqualToSize(indicatorSize, CGSizeZero)) {
-                        self.indicatorView.frame = CGRectMake(contentW, (contentH - indicatorSize.height) * 0.5, indicatorSize.width, indicatorSize.height);
-                        contentW += indicatorSize.width + marginH;
-                    }
-                    if (!CGSizeEqualToSize(textSize, CGSizeZero)) {
-                        self.textLabel.frame = CGRectMake(contentW, (contentH - textSize.height) * 0.5, textSize.width, textSize.height);
-                        contentW += textSize.width + marginH;
-                    }
-                    
-                }else {
-                    contentH = MAX(imageSize.height, textSize.height) + 2 * marginV;
-                    
-                    contentW = marginH;
-                    if (!CGSizeEqualToSize(imageSize, CGSizeZero)) {
-                        self.imageView.frame = CGRectMake(contentW, (contentH - imageSize.height) * 0.5, imageSize.width, imageSize.height);
-                        contentW += imageSize.width + marginH;
-                    }
-                    if (!CGSizeEqualToSize(textSize, CGSizeZero)) {
-                        self.textLabel.frame = CGRectMake(contentW, (contentH - textSize.height) * 0.5, textSize.width, textSize.height);
-                        contentW += textSize.width + marginH;
-                    }
-                    
+                contentH = MAX(loadingSize.height, textSize.height) + 2 * marginV;
+                
+                contentW = marginH;
+                if (!CGSizeEqualToSize(loadingSize, CGSizeZero)) {
+                    self.loadingView.frame = CGRectMake(contentW, (contentH - loadingSize.height) * 0.5, loadingSize.width, loadingSize.height);
+                    contentW += loadingSize.width + marginH;
+                }
+                if (!CGSizeEqualToSize(textSize, CGSizeZero)) {
+                    self.textLabel.frame = CGRectMake(contentW, (contentH - textSize.height) * 0.5, textSize.width, textSize.height);
+                    contentW += textSize.width + marginH;
                 }
                 
                 break;
@@ -474,34 +488,17 @@
         switch (self.style) {
             case KCToastViewStyleLoading:
                 
-                if (self.loadingType == KCToastViewLoadingTypeDefault) {
-                    contentW = MAX(indicatorSize.width, textSize.width) + 2 * marginH;
-                    contentH = marginV;
-                    
-                    if (!CGSizeEqualToSize(indicatorSize, CGSizeZero)) {
-                        self.indicatorView.frame = CGRectMake((contentW - indicatorSize.width) * 0.5, contentH, indicatorSize.width, indicatorSize.height);
-                        contentH += indicatorSize.height + marginV;
-                    }
-                    if (!CGSizeEqualToSize(textSize, CGSizeZero)) {
-                        self.textLabel.frame = CGRectMake((contentW - textSize.width) * 0.5, contentH, textSize.width, textSize.height);
-                        contentH += textSize.height + marginV;
-                    }
-                    
-                }else {
-                    contentW = MAX(imageSize.width, textSize.width) + 2 * marginH;
-                    contentH = marginV;
-                    
-                    if (!CGSizeEqualToSize(imageSize, CGSizeZero)) {
-                        self.imageView.frame = CGRectMake((contentW - imageSize.width) * 0.5, contentH, imageSize.width, imageSize.height);
-                        contentH += imageSize.height + marginV;
-                    }
-                    if (!CGSizeEqualToSize(textSize, CGSizeZero)) {
-                        self.textLabel.frame = CGRectMake((contentW - textSize.width) * 0.5, contentH, textSize.width, textSize.height);
-                        contentH += textSize.height + marginV;
-                    }
-                    
-                }
+                contentW = MAX(loadingSize.width, textSize.width) + 2 * marginH;
+                contentH = marginV;
                 
+                if (!CGSizeEqualToSize(loadingSize, CGSizeZero)) {
+                    self.loadingView.frame = CGRectMake((contentW - loadingSize.width) * 0.5, contentH, loadingSize.width, loadingSize.height);
+                    contentH += loadingSize.height + marginV;
+                }
+                if (!CGSizeEqualToSize(textSize, CGSizeZero)) {
+                    self.textLabel.frame = CGRectMake((contentW - textSize.width) * 0.5, contentH, textSize.width, textSize.height);
+                    contentH += textSize.height + marginV;
+                }
                 
                 break;
             case KCToastViewStyleProgress:

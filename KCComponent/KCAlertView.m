@@ -72,6 +72,15 @@
     alertView.style = style;
     alertView.detail = detail;
     alertView.actions = actions;
+    switch (style) {
+        case KCAlertViewStyleAlert:
+            alertView.backgroundDismiss = NO;
+            break;
+            
+        default:
+            alertView.backgroundDismiss = YES;
+            break;
+    }
     
     return alertView;
 }
@@ -89,7 +98,7 @@
     alertView.contentBackgroundColor = appearance.contentBackgroundColor;
     alertView.buttonBackgroundImage = appearance.buttonBackgroundImage;
     alertView.buttonHighlightedBackgroundImage = appearance.buttonHighlightedBackgroundImage;
-    return [self new];
+    return alertView;
 }
 
 

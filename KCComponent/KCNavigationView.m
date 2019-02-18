@@ -21,6 +21,7 @@
     return instance_;
 }
 
+
 - (instancetype)init
 {
     if (self = [super init]) {
@@ -94,15 +95,222 @@
 
 @end
 
+
+
+/***********KCNavigationContentView*************/
+@interface KCNavigationContentView: UIView
+
+
+@property (nonatomic,strong) UILabel *titleLabel;
+@property (nonatomic,strong) UIView *titleView;
+
+@property (nonatomic,strong) NSArray *leftBtns;
+@property (nonatomic,strong) NSArray *rightBtns;
+
+@property (nonatomic,assign) CGFloat contentSpacing;
+@property (nonatomic,assign) CGFloat contentInset;
+
+@end
+
+@implementation KCNavigationContentView
+
+
+- (UILabel *)titleLabel
+{
+    if (!_titleLabel) {
+        _titleLabel = [UILabel new];
+        _titleLabel.font = [UIFont boldSystemFontOfSize:18];
+        _titleLabel.textColor = [UIColor colorWithRed:18/255.0 green:18/255.0 blue:18/255.0 alpha:1];
+        _titleLabel.textAlignment = NSTextAlignmentCenter;
+    }
+    return _titleLabel;
+}
+
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        self.contentSpacing = 5;
+        self.contentInset = 5;
+        [self addSubview:self.titleLabel];
+    }
+    return self;
+}
+
+- (void)setTitleView:(UIView *)titleView
+{
+    [_titleView removeFromSuperview];
+    _titleView = titleView;
+    if (titleView) {
+       
+        [self addSubview:titleView];
+        self.titleLabel.hidden = YES;
+    }else {
+        self.titleLabel.hidden = NO;
+    }
+    
+    [self setNeedsLayout];
+}
+
+- (void)setLeftBtns:(NSArray *)leftBtns
+{
+    
+    [_leftBtns makeObjectsPerformSelector:@selector(removeFromSuperview)];
+    
+    _leftBtns = leftBtns;
+    
+    for (UIButton *btn in leftBtns) {
+        [self addSubview:btn];
+    }
+    
+    [self setNeedsLayout];
+    
+    
+}
+
+- (void)setRightBtns:(NSArray *)rightBtns
+{
+    [_rightBtns makeObjectsPerformSelector:@selector(removeFromSuperview)];
+    
+    _rightBtns = rightBtns;
+    
+    for (UIButton *btn in rightBtns) {
+        [self addSubview:btn];
+    }
+    
+    [self setNeedsLayout];
+}
+
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    
+    CGFloat btnH = self.bounds.size.height;
+    CGFloat btnW = btnH;
+    CGFloat btnX = 0;
+    CGFloat btnY = 0;
+    
+    UIView *leftView = nil;
+    for (UIButton *btn in self.leftBtns) {
+        
+        [btn sizeToFit];
+        
+        btnW = MAX(btnW, btn.frame.size.width);
+        
+        if (leftView) {
+            btnX = CGRectGetMaxX(leftView.frame) + self.contentSpacing;
+        }else {
+            btnX = self.contentInset;
+        }
+        
+        btn.frame = CGRectMake(btnX, btnY, btnW, btnH);
+        
+        leftView = btn;
+    }
+    
+    UIView *rightView = nil;
+    
+    for (UIButton *btn in self.rightBtns) {
+        
+        [btn sizeToFit];
+        
+        btnW = MAX(btnW, btn.frame.size.width);
+        
+        if (rightView) {
+            btnX = rightView.frame.origin.x - self.contentSpacing - btnW;
+        }else {
+            btnX = self.bounds.size.width - self.contentInset - btnW;
+        }
+        
+        btn.frame = CGRectMake(btnX, btnY, btnW, btnH);
+        
+        rightView = btn;
+    }
+    
+    CGFloat maxTitleW = rightView.frame.origin.x - CGRectGetMaxX(leftView.frame);
+    
+    CGFloat titleW = maxTitleW;
+    CGFloat titleH = 0;
+    if (self.titleView) {
+        titleW = MIN(titleW, self.titleView.frame.size.width);
+        titleH = self.titleView.frame.size.height;
+        self.titleView.frame = CGRectMake(0, 0, titleW, titleH);
+        self.titleView.center = CGPointMake(self.bounds.size.width * 0.5, self.bounds.size.height * 0.5);
+    }else {
+        [self.titleLabel sizeToFit];
+        titleW = MIN(self.titleLabel.frame.size.width, titleW);
+        titleH = self.titleLabel.frame.size.height;
+        self.titleLabel.frame = CGRectMake(0, 0, titleW, titleH);
+        self.titleLabel.center = CGPointMake(self.bounds.size.width * 0.5, self.bounds.size.height * 0.5);
+    }
+    
+    
+}
+
+@end
+
+/***********KCNavigationBackgroundView*************/
+@interface KCNavigationBackgroundView: UIImageView
+
+@property (nonatomic,strong) UIImageView *shadowView;
+@property (nonatomic,strong) UIVisualEffectView *blurView;
+
+@end
+
+@implementation KCNavigationBackgroundView
+
+
+- (UIImageView *)shadowView
+{
+    if (!_shadowView) {
+        _shadowView = [[UIImageView alloc] init];
+        _shadowView.backgroundColor = [UIColor colorWithWhite:0 alpha:0.1];
+    }
+    return _shadowView;
+}
+
+- (UIVisualEffectView *)blurView
+{
+    if (!_blurView) {
+        UIBlurEffect *blur = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
+        _blurView = [[UIVisualEffectView alloc] initWithEffect:blur];
+    }
+    
+    return _blurView;
+}
+
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        
+        self.contentMode = UIViewContentModeScaleAspectFill;
+        self.clipsToBounds = YES;
+        [self addSubview:self.blurView];
+        [self addSubview:self.shadowView];
+        
+    }
+    return self;
+}
+
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    
+    self.blurView.frame = self.bounds;
+    
+    CGFloat shadowH = self.shadowView.image ? self.shadowView.image.size.height : 1;
+    
+    self.shadowView.frame = CGRectMake(0, self.bounds.size.height - shadowH, self.bounds.size.width, shadowH);
+}
+
+@end
+
+
 @interface KCNavigationView ()
 
-@property (nonatomic,strong) NSMutableArray *leftButtons;
-@property (nonatomic,strong) NSMutableArray *rightButtons;
-
-
-
-@property (nonatomic,strong) NSLayoutConstraint *statusBarHeightCons;
-@property (nonatomic,strong) NSLayoutConstraint *backgroundViewTopCons;
+@property (nonatomic,strong) KCNavigationBackgroundView *bgView;
+@property (nonatomic,strong) KCNavigationContentView *contentView;
 
 @end
 
@@ -187,13 +395,13 @@
         
         NSInteger index = [self.leftButtonItems indexOfObject:object];
         
-        btn = self.leftButtons[index];
+        btn = self.contentView.leftBtns[index];
         
     }else {
         
         NSInteger index = [self.rightButtonItems indexOfObject:object];
         
-        btn = self.rightButtons[index];
+        btn = self.contentView.rightBtns[index];
     }
     
     KSNavigationButtonItem *buttonItem = object;
@@ -215,7 +423,7 @@
         [btn setImage:buttonItem.selectedImage forState:UIControlStateSelected];
         
     }else if ([keyPath isEqualToString:@"titleFont"]) {
-//        [btn setTitleColor:buttonItem.titleColor forState:UIControlStateNormal];
+        
         btn.titleLabel.font = buttonItem.titleFont;
         
     }else if ([keyPath isEqualToString:@"titleColor"]) {
@@ -236,61 +444,97 @@
 
 
 #pragma mark -Setter
+- (void)setItemInset:(CGFloat)itemInset
+{
+    self.contentView.contentInset = itemInset;
+}
+
+- (CGFloat)itemInset
+{
+    return self.contentView.contentInset;
+}
+
+- (void)setItemSpacing:(CGFloat)itemSpacing
+{
+    self.contentView.contentSpacing = itemSpacing;
+}
+
+- (CGFloat)itemSpacing
+{
+    return self.contentView.contentSpacing;
+}
+
 - (void)setBackgroundAlpha:(CGFloat)backgroundAlpha
 {
-    _backgroundAlpha = backgroundAlpha;
-    
-    self.backgroundView.alpha = backgroundAlpha;
-    self.shadowView.alpha = backgroundAlpha;
-    self.statusBar.alpha = backgroundAlpha;
+    self.bgView.alpha = backgroundAlpha;
+}
+
+- (CGFloat)backgroundAlpha
+{
+    return self.bgView.alpha;
+}
+
+- (void)setBackgroundColor:(UIColor *)backgroundColor
+{
+    self.bgView.backgroundColor = backgroundColor;
+}
+
+- (UIColor *)backgroundColor
+{
+    return self.bgView.backgroundColor;
 }
 
 - (void)setTitle:(NSString *)title
 {
-    self.titleLabel.text = title;
-    [self setNeedsLayout];
+    self.contentView.titleLabel.text = title;
+    [self.contentView setNeedsLayout];
+    
 }
 
 - (NSString *)title
 {
-    return self.titleLabel.text;
+    return self.contentView.titleLabel.text;
 }
 
 - (void)setTitleFont:(UIFont *)titleFont
 {
-    self.titleLabel.font = titleFont;
+    self.contentView.titleLabel.font = titleFont;
 }
 
 - (UIFont *)titleFont
 {
-    return self.titleLabel.font;
+    return self.contentView.titleLabel.font;
 }
 
 - (void)setTitleColor:(UIColor *)titleColor
 {
-    self.titleLabel.textColor = titleColor;
+    self.contentView.titleLabel.textColor = titleColor;
 }
 
 - (UIColor *)titleColor
 {
-    return self.titleLabel.textColor;
+   return  self.contentView.titleLabel.textColor;
 }
 
 
 - (void)setAttributedTitle:(NSAttributedString *)attributedTitle
 {
-    _attributedTitle = attributedTitle;
-    
-    self.titleLabel.attributedText = attributedTitle;
-    [self setNeedsLayout];
+    self.contentView.titleLabel.attributedText = attributedTitle;
+}
+
+- (NSAttributedString *)attributedTitle
+{
+    return self.contentView.titleLabel.attributedText;
 }
 
 - (void)setTitleView:(UIView *)titleView
 {
-    [_titleView removeFromSuperview];
-    _titleView = titleView;
-    [self addSubview:titleView];
-    [self setNeedsLayout];
+    self.contentView.titleView = titleView;
+}
+
+- (UIView *)titleView
+{
+    return self.contentView.titleView;
 }
 
 - (UIButton *)buttonWithButtonItem:(KSNavigationButtonItem *)buttonItem index:(NSInteger)index action:(SEL)action
@@ -312,100 +556,64 @@
     btn.selected = buttonItem.isSelected;
     btn.tag = index;
     
-    btn.translatesAutoresizingMaskIntoConstraints = NO;
     [btn setImage:buttonItem.disabledImage forState:UIControlStateDisabled];
     [btn addTarget:self action:action forControlEvents:UIControlEventTouchUpInside];
-    [btn sizeToFit];
-    [self addSubview:btn];
-    /**/
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:btn attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTop multiplier:1 constant:0]];
-    
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:btn attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeBottom multiplier:1 constant:0]];
-    
-//    CGFloat btnW = btn.frame.size.width > 44 ? btn.frame.size.width : 44;
-    /*
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:btn attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterY multiplier:1 constant:10]];
-    [btn addConstraint:[NSLayoutConstraint constraintWithItem:btn attribute:NSLayoutAttributeHeight relatedBy:0 toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:44]];*/
-                           
-    [btn addConstraint:[NSLayoutConstraint constraintWithItem:btn attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationGreaterThanOrEqual toItem:btn attribute:NSLayoutAttributeHeight multiplier:1 constant:0]];
     
     return btn;
 }
 
 - (void)setupLeftButtons
 {
-    [self.leftButtons makeObjectsPerformSelector:@selector(removeFromSuperview)];
-    [self.leftButtons removeAllObjects];
     
-    UIButton *leftPreviousBtn = nil;
+    NSMutableArray *btns = @[].mutableCopy;
     for (int i = 0; i < self.leftButtonItems.count; i++) {
         
         UIButton *btn = [self buttonWithButtonItem:self.leftButtonItems[i] index:i action:@selector(leftBtnClick:)];
         
-        [self.leftButtons addObject:btn];
-        
-        if (leftPreviousBtn) {
-            
-            [self addConstraint:[NSLayoutConstraint constraintWithItem:btn attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:leftPreviousBtn attribute:NSLayoutAttributeRight multiplier:1 constant:self.itemSpacing]];
-        }else {
-            
-            [self addConstraint:[NSLayoutConstraint constraintWithItem:btn attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeLeft multiplier:1 constant:self.itemInset]];
-        }
-        
-        
-        
-        leftPreviousBtn = btn;
+        [btns addObject:btn];
         
     }
+    
+    self.contentView.leftBtns = btns;
+    
 }
 
 - (void)setupRightButtons
 {
-    [self.rightButtons makeObjectsPerformSelector:@selector(removeFromSuperview)];
-    [self.rightButtons removeAllObjects];
     
-    UIButton *rightPreviousBtn = nil;
+    NSMutableArray *btns = @[].mutableCopy;
     for (int i = 0; i < self.rightButtonItems.count; i++) {
         
         UIButton *btn = [self buttonWithButtonItem:self.rightButtonItems[i] index:i action:@selector(rightBtnClick:)];
         
         
-        [self.rightButtons addObject:btn];
-        
-        if (rightPreviousBtn) {
-            
-            [self addConstraint:[NSLayoutConstraint constraintWithItem:btn attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:rightPreviousBtn attribute:NSLayoutAttributeLeft multiplier:1 constant:-self.itemSpacing]];
-        }else {
-            
-            [self addConstraint:[NSLayoutConstraint constraintWithItem:btn attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeRight multiplier:1 constant:-self.itemInset]];
-        }
-        
-        rightPreviousBtn = btn;
+        [btns addObject:btn];
+
         
     }
+    self.contentView.rightBtns = btns;
 
 }
 
 #pragma mark -Setter
 - (void)setBackgroundImage:(UIImage *)backgroundImage
 {
-    _backgroundImage = backgroundImage;
-    self.backgroundView.image = backgroundImage;
+    self.bgView.image = backgroundImage;
 }
 
-- (void)setStatusBarImage:(UIImage *)statusBarImage
+- (UIImage *)backgroundImage
 {
-    _statusBarImage = statusBarImage;
-    
-    self.statusBar.image = statusBarImage;
+    return self.bgView.image;
 }
-
 
 - (void)setShadowImage:(UIImage *)shadowImage
 {
-    _shadowImage = shadowImage;
-    
-    self.shadowView.image = shadowImage;
+    self.bgView.shadowView.image = shadowImage;
+}
+
+- (UIImage *)shadowImage
+{
+    return self.bgView.shadowView.image;
 }
 
 - (void)setLeftButtonItems:(NSArray<KSNavigationButtonItem *> *)leftButtonItems
@@ -478,69 +686,20 @@
 
 #pragma mark -Getter
 
-- (UIImageView *)statusBar
+- (KCNavigationContentView *)contentView
 {
-    if (!_statusBar) {
-        _statusBar = [UIImageView new];
-        _statusBar.backgroundColor = [UIColor clearColor];
+    if (!_contentView) {
+        _contentView = [[KCNavigationContentView alloc] init];
     }
-    return _statusBar;
+    return _contentView;
 }
 
-- (NSMutableArray *)leftButtons
+- (KCNavigationBackgroundView *)bgView
 {
-    if (!_leftButtons) {
-        _leftButtons = @[].mutableCopy;
+    if (!_bgView) {
+        _bgView = [[KCNavigationBackgroundView alloc] init];
     }
-    return _leftButtons;
-}
-
-- (NSMutableArray *)rightButtons
-{
-    if (!_rightButtons) {
-        _rightButtons = @[].mutableCopy;
-    }
-    return _rightButtons;
-}
-
-- (UIImageView *)shadowView
-{
-    if (!_shadowView) {
-        _shadowView = [UIImageView new];
-        
-        CGRect rect = CGRectMake(0, 0, 1, 1);
-        UIGraphicsBeginImageContext(rect.size);
-        CGContextRef context  = UIGraphicsGetCurrentContext();
-        CGContextSetFillColorWithColor(context, [UIColor colorWithWhite:0 alpha:0.1].CGColor);
-        CGContextFillRect(context, rect);
-        UIImage *img = UIGraphicsGetImageFromCurrentImageContext();
-        UIGraphicsEndImageContext();
-        
-        _shadowView.image = img;
-    }
-    return _shadowView;
-}
-
-
-- (UILabel *)titleLabel
-{
-    if (!_titleLabel) {
-        _titleLabel = [UILabel new];
-        _titleLabel.font = [UIFont boldSystemFontOfSize:18];
-        _titleLabel.textColor = [UIColor colorWithRed:18/255.0 green:18/255.0 blue:18/255.0 alpha:1];
-        _titleLabel.textAlignment = NSTextAlignmentCenter;
-    }
-    return _titleLabel;
-}
-
-- (UIImageView *)backgroundView
-{
-    if (!_backgroundView) {
-        _backgroundView = [UIImageView new];
-        _backgroundView.backgroundColor = [UIColor colorWithWhite:1 alpha:0.98];
-//        _backgroundView.backgroundColor = [UIColor redColor];
-    }
-    return _backgroundView;
+    return _bgView;
 }
 
 #pragma mark -Event
@@ -574,6 +733,8 @@
     navigationView.itemInset = appearance.itemInset;
     navigationView.titleColor = appearance.titleColor;
     navigationView.titleFont = appearance.titleFont;
+    navigationView.backgroundColor = appearance.backgroundColor;
+    
     
     return navigationView;
 }
@@ -594,92 +755,27 @@
     if (self) {
         
         _translucent = YES;
-        _itemSpacing = 5;
-        _itemInset = 5;
+//        _itemSpacing = 5;
+//        _itemInset = 5;
         [self setupUI];
-        [self setupLayout];
         
     }
     return self;
 }
 
-
 - (void)layoutSubviews
 {
     [super layoutSubviews];
     
-//    CGRect rect = [self.superview convertRect:self.frame toView:nil];
-    
-//    NSLog(@"%@", NSStringFromCGRect(self.frame));
-    
-    
-    self.statusBarHeightCons.constant = self.frame.origin.y;
-    self.backgroundViewTopCons.constant = -self.frame.origin.y;
-    
-    UIButton *leftLastBtn = self.leftButtons.lastObject;
-    UIButton *rightLastBtn = self.rightButtons.lastObject;
-    
-    CGFloat startX = 0;
-    
-    if (leftLastBtn) {
-        startX = leftLastBtn.frame.size.width + leftLastBtn.frame.origin.x + self.itemSpacing;
-    }else {
-        startX += self.itemInset;
+    CGFloat topInset = 0;
+    if (@available(iOS 11.0, *)) {
+        topInset = self.window.safeAreaInsets.top;
     }
     
-    CGFloat endX = self.bounds.size.width;
-    if (rightLastBtn) {
-        endX = rightLastBtn.frame.origin.x - self.itemSpacing;
-    }else {
-        
-        endX -= self.itemInset;
-    }
+    self.bgView.frame = CGRectMake(0, -topInset, self.bounds.size.width, self.bounds.size.height + topInset);
     
-    CGFloat maxWidth = endX - startX;
+    self.contentView.frame = CGRectMake(0, 0, self.bounds.size.width, 44);
     
-    [self.titleLabel sizeToFit];
-    
-//    CGFloat statusBarHeight = self.statusBar.frame.size.height;
-    if (self.titleLabel.frame.size.width > maxWidth) {
-        
-        CGRect titleLabelFrame = self.titleLabel.frame;
-        titleLabelFrame.origin.x = startX;
-        titleLabelFrame.size.width = maxWidth;
-        self.titleLabel.frame = titleLabelFrame;
-        
-        
-        CGPoint titleLabelCenter = self.titleLabel.center;
-        titleLabelCenter.y = self.frame.size.height * 0.5;
-        self.titleLabel.center = titleLabelCenter;
-        
-        
-    }else {
-        
-        self.titleLabel.center = CGPointMake(self.frame.size.width * 0.5, self.frame.size.height * 0.5);
-    }
-    
-    
-    if (!self.titleView) {
-        
-        return;
-        
-    }
-    
-    if (self.titleView.frame.size.width > maxWidth) {
-        
-        CGRect titleViewFrame = self.titleView.frame;
-        titleViewFrame.origin.x = startX;
-        titleViewFrame.size.width = maxWidth;
-        self.titleView.frame = titleViewFrame;
-        
-        CGPoint titleViewCenter = self.titleView.center;
-        titleViewCenter.y = self.frame.size.height * 0.5;
-        self.titleView.center = titleViewCenter;
-        
-    }else {
-        
-        self.titleView.center = CGPointMake(self.frame.size.width * 0.5, self.frame.size.height * 0.5);
-    }
     
     
 }
@@ -687,55 +783,8 @@
 #pragma mark -Private Method
 - (void)setupUI
 {
-    [self addSubview:self.backgroundView];
-    [self addSubview:self.titleLabel];
-    [self addSubview:self.shadowView];
-    [self addSubview:self.statusBar];
-}
-
-
-- (void)setupLayout {
-    
-//    CGFloat top = 20;
-//    if (@available(iOS 11.0, *)) {
-//        top = [UIApplication sharedApplication].keyWindow.safeAreaInsets.top;
-//    }
-//    top = MAX(top, 20);
-
-    self.statusBar.translatesAutoresizingMaskIntoConstraints = NO;
-    
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.statusBar attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTop multiplier:1 constant:0]];
-    
-    self.statusBarHeightCons = [NSLayoutConstraint constraintWithItem:self.statusBar attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:0];
-    [self.statusBar addConstraint:self.statusBarHeightCons];
-    
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.statusBar attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeLeft multiplier:1 constant:0]];
-    
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.statusBar attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeRight multiplier:1 constant:0]];
-    
-    /**** bgView约束 *****/
-    self.backgroundView.translatesAutoresizingMaskIntoConstraints = NO;
-    
-    self.backgroundViewTopCons = [NSLayoutConstraint constraintWithItem:self.backgroundView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTop multiplier:1 constant:0];
-    [self addConstraint:self.backgroundViewTopCons];
-    
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.backgroundView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeBottom multiplier:1 constant:0]];
-    
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.backgroundView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeLeft multiplier:1 constant:0]];
-    
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.backgroundView attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeRight multiplier:1 constant:0]];
-    
-    /**** shadowView约束 *****/
-    self.shadowView.translatesAutoresizingMaskIntoConstraints = NO;
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.shadowView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeBottom multiplier:1 constant:0]];
-    
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.shadowView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeLeft multiplier:1 constant:0]];
-    
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.shadowView attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeRight multiplier:1 constant:0]];
-    
-    [self.shadowView addConstraint:[NSLayoutConstraint constraintWithItem:self.shadowView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:0.5]];
-    
-    
+    [self addSubview:self.bgView];
+    [self addSubview:self.contentView];
 }
 
 #pragma mark -Public Method
@@ -834,35 +883,6 @@
         
     }
 }
-
-- (UIButton *)buttonWithButtonItem:(KSNavigationButtonItem *)buttonItem
-{
-    if ([self.leftButtonItems containsObject:buttonItem]) {
-        
-        return self.leftButtons[[self.leftButtonItems indexOfObject:buttonItem]];
-    }else if ([self.rightButtonItems containsObject:buttonItem]) {
-        return self.rightButtons[[self.rightButtonItems indexOfObject:buttonItem]];
-    }
-    return nil;
-}
-
-- (UIButton *)leftButtonAtIndex:(NSUInteger)index
-{
-    if (self.leftButtons.count > index) {
-        return self.leftButtons[index];
-    }
-    return nil;
-}
-
-- (UIButton *)rightButtonAtIndex:(NSUInteger)index
-{
-    
-    if (self.rightButtons.count > index) {
-        return self.rightButtons[index];
-    }
-    return nil;
-}
-
 
 
 @end

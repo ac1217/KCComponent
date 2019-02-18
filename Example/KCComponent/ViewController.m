@@ -10,11 +10,9 @@
 #import "KCComponent.h"
 
 //#import "SDWebImage.h"
-#import "UIImageView+WebCache.h";
+//#import "UIImageView+WebCache.h";
 
-@interface ViewController ()<UIScrollViewDelegate, KCBannerViewDelegate, KCBannerViewDataSource>
-@property (nonatomic,strong) KCProgressView  *pv;
-@property (nonatomic,strong) KCToastView  *tv;
+@interface ViewController ()<UIScrollViewDelegate>
 
 @end
 
@@ -24,56 +22,43 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
+//    self.title = @"1234";
     
-}
-- (IBAction)sheet:(id)sender {
+    KCNavigationView *navView = [KCNavigationView navigationView];
+    navView.backgroundColor = [UIColor blackColor];
+    navView.title = @"45455";
+    [self.view addSubview:navView];
     
-    KCAlertAction *cancel = [KCAlertAction actionWithTitle:@"取消" style:KCAlertActionStyleCancel handler:^(KCAlertAction *action) {
+    navView.leftButtonItem = [KSNavigationButtonItem itemWithTitle:@"123" handle:^(KSNavigationButtonItem *item) {
         
     }];
-    KCAlertAction *item0 = [KCAlertAction actionWithTitle:@"item0" style:KCAlertActionStyleDefault handler:^(KCAlertAction *action) {
-        
-    }];
-    KCAlertAction *item1 = [KCAlertAction actionWithTitle:@"item1" style:KCAlertActionStyleDestructive handler:^(KCAlertAction *action) {
+    navView.rightButtonItem = [KSNavigationButtonItem itemWithTitle:@"456" handle:^(KSNavigationButtonItem *item) {
         
     }];
     
-    KCAlertView *alert = [KCAlertView alertViewWithStyle:KCAlertViewStyleActionSheet title:nil detail:@"23131" actions:@[item0, cancel, item1]];
-    alert.backgroundDismiss = YES;
-    [alert showInView:self.view];
+    navView.titleColor = [UIColor whiteColor];
     
-}
-
-- (IBAction)alert:(id)sender {
+    navView.frame = CGRectMake(0, 44, self.view.bounds.size.width, 64);
+    
+//    UISwitch *st = [UISwitch new];
+//
+//    navView.titleView = st;
+    
+//    self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
+    
+//self.navigationController.navigationBar.prefersLargeTitles = YES;
+    
+//    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"123" style:0 target:nil action:nil];
+//    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"456" style:0 target:nil action:nil];
+    
+//    UISearchController *searchC = [[UISearchController alloc]initWithSearchResultsController:nil];
+//    [searchC setActive:YES];
+//    searchC.searchBar.placeholder = @"Search music/author name.";
     
     
-    KCToastView *toastView = [[KCToastView alloc] init];
-    toastView.style = KCToastViewStyleLoading;
-//    toastView.layoutDirection = KCToastViewLayoutDirectionVertical;
-    toastView.text = @"加载中...";
-    toastView.duration = 0;
+//    self.navigationItem.searchController = searchC;
     
-//    toastView.progressView.style = KCProgressViewStyleLine;
-//    toastView.progressView.progressTextFont = [UIFont systemFontOfSize:12];
-//    toastView.progressSize = CGSizeMake(100, 30);
-    [toastView showInView:self.view];
-    self.tv = toastView;
     
-}
-
-- (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
-{
-    NSInteger count = arc4random_uniform(100);
-    
-    self.pv.progress = count / 100.0;
-    
-    self.tv.progress = self.pv.progress;
-    self.pv.style = KCProgressViewStyleRect;
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 @end

@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface KSNavigationButtonItem : NSObject <UIAppearance>
+@interface KSNavigationButtonItem : NSObject
 
 @property (nonatomic,copy) NSString *title;
 
@@ -50,25 +50,24 @@
 
 @property (nonatomic,assign, getter=isTranslucent) BOOL translucent;
 
+@property (nonatomic, readwrite, assign) BOOL prefersLargeTitles;
 // 状态栏
-@property (nonatomic,strong) UIImageView *statusBar;
+//@property (nonatomic,strong) UIImageView *statusBar;
 
-@property (nonatomic,strong) UILabel *titleLabel;
+//@property (nonatomic,strong) UILabel *titleLabel;
 /**** 背景色默认白色，也可以设置图片，可设置alpha透明度 ****/
-@property (nonatomic,strong) UIImageView *backgroundView;
-@property (nonatomic,strong) UIImageView *shadowView;
+//@property (nonatomic,strong) UIImageView *backgroundView;
+//@property (nonatomic,strong) UIImageView *shadowView;
 
 @property (nonatomic,strong) UIImage *backgroundImage;
 @property (nonatomic,strong) UIImage *shadowImage;
-@property (nonatomic,strong) UIImage *statusBarImage;
+@property (nonatomic,assign) CGFloat backgroundAlpha;
+@property (nonatomic,strong) UIColor *backgroundColor; // apprance
 
 @property (nonatomic,assign) CGFloat itemSpacing; // apprance
 @property (nonatomic,assign) CGFloat itemInset; // apprance
 
 /*** 设置背景透明度，同时设置backgroundView和shadowView, statusBar **/
-@property (nonatomic,assign) CGFloat backgroundAlpha;
-
-
 @property (nonatomic,strong) UIFont *titleFont; // apprance
 @property (nonatomic,strong) UIColor *titleColor; // apprance
 @property (nonatomic,copy) NSString *title;
@@ -91,8 +90,8 @@
 - (void)insertRightButtonItem:(KSNavigationButtonItem *)buttonItem atIndex:(NSUInteger)index;
 - (void)removeRightButtonItemAtIndex:(NSUInteger)index;
 
-- (UIButton *)buttonWithButtonItem:(KSNavigationButtonItem *)buttonItem;
-- (UIButton *)leftButtonAtIndex:(NSUInteger)index;
-- (UIButton *)rightButtonAtIndex:(NSUInteger)index;
+//- (UIButton *)buttonWithButtonItem:(KSNavigationButtonItem *)buttonItem;
+//- (UIButton *)leftButtonAtIndex:(NSUInteger)index;
+//- (UIButton *)rightButtonAtIndex:(NSUInteger)index;
 
 @end

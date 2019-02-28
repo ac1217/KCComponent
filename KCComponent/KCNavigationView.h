@@ -12,11 +12,11 @@
 
 @property (nonatomic,copy) NSString *title;
 
-@property (nonatomic,strong) UIFont *titleFont; // apprance
-@property (nonatomic,strong) UIColor *titleColor; // apprance
-@property (nonatomic,strong) UIColor *highlightedTitleColor; // apprance
-@property (nonatomic,strong) UIColor *selectedTitleColor; // apprance
-@property (nonatomic,strong) UIColor *disabledTitleColor; // apprance
+@property (nonatomic,strong) UIFont *titleFont;
+@property (nonatomic,strong) UIColor *titleColor;
+@property (nonatomic,strong) UIColor *highlightedTitleColor;
+@property (nonatomic,strong) UIColor *selectedTitleColor;
+@property (nonatomic,strong) UIColor *disabledTitleColor;
 
 @property (nonatomic,strong) UIImage *image;
 @property (nonatomic,strong) UIImage *highlightedImage;
@@ -50,14 +50,8 @@
 
 @property (nonatomic,assign, getter=isTranslucent) BOOL translucent;
 
-@property (nonatomic, readwrite, assign) BOOL prefersLargeTitles;
-// 状态栏
-//@property (nonatomic,strong) UIImageView *statusBar;
+//@property (nonatomic, readwrite, assign) BOOL prefersLargeTitles;
 
-//@property (nonatomic,strong) UILabel *titleLabel;
-/**** 背景色默认白色，也可以设置图片，可设置alpha透明度 ****/
-//@property (nonatomic,strong) UIImageView *backgroundView;
-//@property (nonatomic,strong) UIImageView *shadowView;
 
 @property (nonatomic,strong) UIImage *backgroundImage;
 @property (nonatomic,strong) UIImage *shadowImage;
@@ -67,7 +61,6 @@
 @property (nonatomic,assign) CGFloat itemSpacing; // apprance
 @property (nonatomic,assign) CGFloat itemInset; // apprance
 
-/*** 设置背景透明度，同时设置backgroundView和shadowView, statusBar **/
 @property (nonatomic,strong) UIFont *titleFont; // apprance
 @property (nonatomic,strong) UIColor *titleColor; // apprance
 @property (nonatomic,copy) NSString *title;

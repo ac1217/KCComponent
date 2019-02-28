@@ -24,6 +24,8 @@
     // Do any additional setup after loading the view, typically from a nib.
 //    self.title = @"1234";
     
+    CAAnimation
+    
     KCNavigationView *navView = [KCNavigationView navigationView];
     navView.backgroundColor = [UIColor blackColor];
     navView.title = @"45455";

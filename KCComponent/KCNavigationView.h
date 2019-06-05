@@ -12,6 +12,8 @@
 
 @property (nonatomic,copy) NSString *title;
 
+@property (nonatomic,strong) UIView *customView;
+
 @property (nonatomic,strong) UIFont *titleFont;
 @property (nonatomic,strong) UIColor *titleColor;
 @property (nonatomic,strong) UIColor *highlightedTitleColor;
@@ -27,8 +29,10 @@
 @property (nonatomic,assign, getter=isSelected) BOOL selected;
 @property (nonatomic,copy) void(^handle)(KSNavigationButtonItem * buttonItem);
 
-+ (instancetype)itemWithTitle:(NSString *)title handle:(void(^)(KSNavigationButtonItem * item))handle;;
-- (instancetype)initWithTitle:(NSString *)title handle:(void(^)(KSNavigationButtonItem * item))handle;;
++ (instancetype)itemWithCustomView:(UIView *)customView;
+
++ (instancetype)itemWithTitle:(NSString *)title handle:(void(^)(KSNavigationButtonItem * item))handle;
+- (instancetype)initWithTitle:(NSString *)title handle:(void(^)(KSNavigationButtonItem * item))handle;
 
 
 + (instancetype)itemWithImage:(UIImage *)image handle:(void(^)(KSNavigationButtonItem * item))handle;
@@ -40,6 +44,8 @@
 + (instancetype)itemWithTitle:(NSString *)title image:(UIImage *)image highlightedImage:(UIImage *)highlightedImage handle:(void(^)(KSNavigationButtonItem * item))handle;
 
 - (instancetype)initWithTitle:(NSString *)title image:(UIImage *)image highlightedImage:(UIImage *)highlightedImage handle:(void(^)(KSNavigationButtonItem * item))handle;
+
+- (instancetype)initWithCustomView:(UIView *)customView;
 
 @end
 

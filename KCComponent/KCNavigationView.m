@@ -93,6 +93,19 @@
     
 }
 
+- (instancetype)initWithCustomView:(UIView *)customView
+{
+    if (self = [self init]) {
+        _customView = customView;
+    }
+    return self;
+}
+
++ (instancetype)itemWithCustomView:(UIView *)customView
+{
+    return [[self alloc] initWithCustomView:customView];
+}
+
 @end
 
 
@@ -130,8 +143,8 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        self.contentSpacing = 5;
-        self.contentInset = 5;
+        self.contentSpacing = 10;
+        self.contentInset = 15;
         [self addSubview:self.titleLabel];
     }
     return self;
@@ -150,6 +163,32 @@
     }
     
     [self setNeedsLayout];
+}
+
+
+- (UIButton *)buttonWithButtonItem:(KSNavigationButtonItem *)buttonItem index:(NSInteger)index action:(SEL)action
+{
+    UIButton *btn = [UIButton new];
+    btn.titleLabel.font = buttonItem.titleFont;
+    [btn setTitle:buttonItem.title forState:UIControlStateNormal];
+    [btn setImage:buttonItem.image forState:UIControlStateNormal];
+    [btn setImage:buttonItem.highlightedImage forState:UIControlStateHighlighted];
+    [btn setImage:buttonItem.disabledImage forState:UIControlStateDisabled];
+    [btn setImage:buttonItem.disabledImage forState:UIControlStateSelected];
+
+    [btn setTitleColor:buttonItem.titleColor forState:UIControlStateNormal];
+    [btn setTitleColor:buttonItem.selectedTitleColor forState:UIControlStateSelected];
+    [btn setTitleColor:buttonItem.highlightedTitleColor forState:UIControlStateHighlighted];
+    [btn setTitleColor:buttonItem.disabledTitleColor forState:UIControlStateDisabled];
+
+    btn.enabled = buttonItem.isEnabled;
+    btn.selected = buttonItem.isSelected;
+    btn.tag = index;
+
+    [btn setImage:buttonItem.disabledImage forState:UIControlStateDisabled];
+    [btn addTarget:self action:action forControlEvents:UIControlEventTouchUpInside];
+
+    return btn;
 }
 
 - (void)setLeftBtns:(NSArray *)leftBtns
@@ -191,30 +230,45 @@
     CGFloat btnY = 0;
     
     UIView *leftView = nil;
-    for (UIButton *btn in self.leftBtns) {
-        
-        [btn sizeToFit];
-        
-        btnW = MAX(btnW, btn.frame.size.width);
+
+    for (UIView *btn in self.leftBtns) {
+
+        if ([btn isKindOfClass:[UIButton class]]) {
+            [btn sizeToFit];
+            btnH = self.bounds.size.height;
+        }else {
+            btnH = btn.frame.size.height;
+        }
+
+        btnW = btn.frame.size.width;
         
         if (leftView) {
             btnX = CGRectGetMaxX(leftView.frame) + self.contentSpacing;
         }else {
             btnX = self.contentInset;
         }
-        
+
         btn.frame = CGRectMake(btnX, btnY, btnW, btnH);
-        
+
+        CGPoint btnCenter = btn.center;
+        btnCenter.y = self.bounds.size.height * 0.5;
+        btn.center = btnCenter;
+
         leftView = btn;
     }
     
     UIView *rightView = nil;
     
-    for (UIButton *btn in self.rightBtns) {
-        
-        [btn sizeToFit];
-        
-        btnW = MAX(btnW, btn.frame.size.width);
+    for (UIView *btn in self.rightBtns) {
+
+        if ([btn isKindOfClass:[UIButton class]]) {
+            [btn sizeToFit];
+            btnH = self.bounds.size.height;
+        }else {
+            btnH = btn.frame.size.height;
+        }
+
+        btnW = btn.frame.size.width;
         
         if (rightView) {
             btnX = rightView.frame.origin.x - self.contentSpacing - btnW;
@@ -223,25 +277,56 @@
         }
         
         btn.frame = CGRectMake(btnX, btnY, btnW, btnH);
+
+        CGPoint btnCenter = btn.center;
+        btnCenter.y = self.bounds.size.height * 0.5;
+        btn.center = btnCenter;
         
         rightView = btn;
     }
+
+    CGFloat left = self.contentInset;
+    if (leftView) {
+        left = CGRectGetMaxX(leftView.frame) + self.contentSpacing;
+    }
+
+    CGFloat right = self.bounds.size.width - self.contentInset;
+    if (rightView) {
+        right = rightView.frame.origin.x - self.contentSpacing;
+    }
     
-    CGFloat maxTitleW = rightView.frame.origin.x - CGRectGetMaxX(leftView.frame);
+    CGFloat maxTitleW = right - left;
     
     CGFloat titleW = maxTitleW;
     CGFloat titleH = 0;
     if (self.titleView) {
+
         titleW = MIN(titleW, self.titleView.frame.size.width);
+
         titleH = self.titleView.frame.size.height;
-        self.titleView.frame = CGRectMake(0, 0, titleW, titleH);
-        self.titleView.center = CGPointMake(self.bounds.size.width * 0.5, self.bounds.size.height * 0.5);
+
+        if (self.titleView.frame.size.width < maxTitleW) {
+
+            self.titleView.frame = CGRectMake(0, 0, titleW, titleH);
+            self.titleView.center = CGPointMake(self.bounds.size.width * 0.5, self.bounds.size.height * 0.5);
+        }else {
+
+            self.titleView.frame = CGRectMake(left, (self.bounds.size.height - titleH) * 0.5, titleW, titleH);
+        }
     }else {
         [self.titleLabel sizeToFit];
         titleW = MIN(self.titleLabel.frame.size.width, titleW);
         titleH = self.titleLabel.frame.size.height;
-        self.titleLabel.frame = CGRectMake(0, 0, titleW, titleH);
-        self.titleLabel.center = CGPointMake(self.bounds.size.width * 0.5, self.bounds.size.height * 0.5);
+
+        if (self.titleLabel.frame.size.width < maxTitleW) {
+
+            self.titleLabel.frame = CGRectMake(0, 0, titleW, titleH);
+            self.titleLabel.center = CGPointMake(self.bounds.size.width * 0.5, self.bounds.size.height * 0.5);
+        }else {
+
+            self.titleLabel.frame = CGRectMake(left, (self.bounds.size.height - titleH) * 0.5, titleW, titleH);
+        }
+
     }
     
     
@@ -567,10 +652,19 @@
     
     NSMutableArray *btns = @[].mutableCopy;
     for (int i = 0; i < self.leftButtonItems.count; i++) {
-        
-        UIButton *btn = [self buttonWithButtonItem:self.leftButtonItems[i] index:i action:@selector(leftBtnClick:)];
-        
-        [btns addObject:btn];
+
+        KSNavigationButtonItem *item = self.leftButtonItems[i];
+
+        if (item.customView) {
+
+            [btns addObject:item.customView];
+
+        }else {
+
+            UIButton *btn = [self buttonWithButtonItem:item index:i action:@selector(leftBtnClick:)];
+
+            [btns addObject:btn];
+        }
         
     }
     
@@ -583,11 +677,20 @@
     
     NSMutableArray *btns = @[].mutableCopy;
     for (int i = 0; i < self.rightButtonItems.count; i++) {
-        
-        UIButton *btn = [self buttonWithButtonItem:self.rightButtonItems[i] index:i action:@selector(rightBtnClick:)];
-        
-        
-        [btns addObject:btn];
+
+        KSNavigationButtonItem *item = self.rightButtonItems[i];
+
+        if (item.customView) {
+
+            [btns addObject:item.customView];
+
+        }else {
+
+            UIButton *btn = [self buttonWithButtonItem:item index:i action:@selector(rightBtnClick:)];
+
+
+            [btns addObject:btn];
+        }
 
         
     }
@@ -773,10 +876,10 @@
     }
     
     self.bgView.frame = CGRectMake(0, -topInset, self.bounds.size.width, self.bounds.size.height + topInset);
-    
-    self.contentView.frame = CGRectMake(0, 0, self.bounds.size.width, 44);
-    
-    
+
+    CGFloat contentViewH = 44;
+    CGFloat contentViewY = 0.5 * (self.frame.size.height - contentViewH);
+    self.contentView.frame = CGRectMake(0, contentViewY, self.bounds.size.width, contentViewH);
     
 }
 

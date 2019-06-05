@@ -22,26 +22,40 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
-//    self.title = @"1234";
-    
-    CAAnimation
+
     
     KCNavigationView *navView = [KCNavigationView navigationView];
+
+    navView.frame = CGRectMake(0, 44, self.view.bounds.size.width, 44);
     navView.backgroundColor = [UIColor blackColor];
-    navView.title = @"45455";
+//    navView.title = @"标题第三方esfd第三方水电费水电费第三方试过是的";
     [self.view addSubview:navView];
     
-    navView.leftButtonItem = [KSNavigationButtonItem itemWithTitle:@"123" handle:^(KSNavigationButtonItem *item) {
+    KSNavigationButtonItem *titleItem1 = [KSNavigationButtonItem itemWithTitle:@"223" handle:^(KSNavigationButtonItem *item) {
         
     }];
-    navView.rightButtonItem = [KSNavigationButtonItem itemWithTitle:@"456" handle:^(KSNavigationButtonItem *item) {
-        
+
+    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 35, 35)];
+    view.backgroundColor = [UIColor redColor];
+
+    KSNavigationButtonItem *viewItem = [KSNavigationButtonItem itemWithCustomView:view];
+
+    navView.leftButtonItems = @[titleItem1, viewItem];
+
+    KSNavigationButtonItem *stItem = [KSNavigationButtonItem itemWithCustomView:[UISwitch new]];
+    KSNavigationButtonItem *titleItem  = [KSNavigationButtonItem itemWithTitle:@"aa" handle:^(KSNavigationButtonItem *item) {
+
     }];
-    
+
+    navView.rightButtonItems = @[stItem, titleItem];
+
     navView.titleColor = [UIColor whiteColor];
-    
-    navView.frame = CGRectMake(0, 44, self.view.bounds.size.width, 64);
-    
+
+    UITextField *textField = [[UITextField alloc] initWithFrame:CGRectMake(0, 0, 500, 35)];
+    textField.backgroundColor = [UIColor redColor];
+
+    navView.titleView = textField;
+
 //    UISwitch *st = [UISwitch new];
 //
 //    navView.titleView = st;

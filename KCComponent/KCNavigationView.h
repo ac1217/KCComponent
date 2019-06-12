@@ -54,11 +54,7 @@
 // 此类方法返回的实例会带apprance效果
 + (instancetype)navigationView;
 
-@property (nonatomic,assign, getter=isTranslucent) BOOL translucent;
-
-//@property (nonatomic, readwrite, assign) BOOL prefersLargeTitles;
-
-
+@property (nonatomic,assign) BOOL backgroundBlur;
 @property (nonatomic,strong) UIImage *backgroundImage;
 @property (nonatomic,strong) UIImage *shadowImage;
 @property (nonatomic,assign) CGFloat backgroundAlpha;

@@ -27,13 +27,15 @@
     KCNavigationView *navView = [KCNavigationView navigationView];
 
     navView.frame = CGRectMake(0, 44, self.view.bounds.size.width, 44);
-    navView.backgroundColor = [UIColor blackColor];
+    navView.backgroundColor = [UIColor clearColor];
+
 //    navView.title = @"标题第三方esfd第三方水电费水电费第三方试过是的";
     [self.view addSubview:navView];
     
-    KSNavigationButtonItem *titleItem1 = [KSNavigationButtonItem itemWithTitle:@"223" handle:^(KSNavigationButtonItem *item) {
+    KSNavigationButtonItem *titleItem1 = [KSNavigationButtonItem itemWithTitle:@" 223" handle:^(KSNavigationButtonItem *item) {
         
     }];
+    titleItem1.image = [UIImage imageNamed:@"speech_choose"];
 
     UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 35, 35)];
     view.backgroundColor = [UIColor redColor];

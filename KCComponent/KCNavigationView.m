@@ -166,30 +166,6 @@
 }
 
 
-- (UIButton *)buttonWithButtonItem:(KSNavigationButtonItem *)buttonItem index:(NSInteger)index action:(SEL)action
-{
-    UIButton *btn = [UIButton new];
-    btn.titleLabel.font = buttonItem.titleFont;
-    [btn setTitle:buttonItem.title forState:UIControlStateNormal];
-    [btn setImage:buttonItem.image forState:UIControlStateNormal];
-    [btn setImage:buttonItem.highlightedImage forState:UIControlStateHighlighted];
-    [btn setImage:buttonItem.disabledImage forState:UIControlStateDisabled];
-    [btn setImage:buttonItem.disabledImage forState:UIControlStateSelected];
-
-    [btn setTitleColor:buttonItem.titleColor forState:UIControlStateNormal];
-    [btn setTitleColor:buttonItem.selectedTitleColor forState:UIControlStateSelected];
-    [btn setTitleColor:buttonItem.highlightedTitleColor forState:UIControlStateHighlighted];
-    [btn setTitleColor:buttonItem.disabledTitleColor forState:UIControlStateDisabled];
-
-    btn.enabled = buttonItem.isEnabled;
-    btn.selected = buttonItem.isSelected;
-    btn.tag = index;
-
-    [btn setImage:buttonItem.disabledImage forState:UIControlStateDisabled];
-    [btn addTarget:self action:action forControlEvents:UIControlEventTouchUpInside];
-
-    return btn;
-}
 
 - (void)setLeftBtns:(NSArray *)leftBtns
 {
@@ -529,6 +505,7 @@
 
 
 #pragma mark -Setter
+
 - (void)setItemInset:(CGFloat)itemInset
 {
     self.contentView.contentInset = itemInset;
@@ -699,6 +676,15 @@
 }
 
 #pragma mark -Setter
+- (void)setBackgroundBlur:(BOOL)backgroundBlur
+{
+    self.bgView.blurView.alpha = backgroundBlur;
+}
+- (BOOL)backgroundBlur
+{
+    return self.bgView.blurView.alpha == 1;
+}
+
 - (void)setBackgroundImage:(UIImage *)backgroundImage
 {
     self.bgView.image = backgroundImage;
